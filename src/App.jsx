@@ -1,122 +1,100 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import styled from 'styled-components'
+
+import HomePage from './no1_pages/HomePage'
+import TodoPage from './no1_pages/TodoPage'
+import EmployeePage from './no1_pages/EmployeePage'
+
+import HeaderBar from './no2_components/layout/HeaderBar'
+import SiderBar from './no2_components/layout/SiderBar'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [isOpen, setIsOpen] = useState(false)
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen)
+  }
+
+  const closeMenu = () => {
+    setIsOpen(false)
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <BrowserRouter>
+      <AppContainer>
+        <HeaderBar toggleMenu={toggleMenu} />
 
-      <div className="ticks"></div>
+        <AppBody>
+          <SiderBar isOpen={isOpen} closeMenu={closeMenu} />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+          <MainContent>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/todo" element={<TodoPage />} />
+              <Route path="/employee" element={<EmployeePage />} />
+            </Routes>
+          </MainContent>
+        </AppBody>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+        {isOpen && <Overlay onClick={closeMenu} />}
+      </AppContainer>
+    </BrowserRouter>
   )
 }
 
 export default App
+
+const AppContainer = styled.div`
+  min-height: 100vh;
+  background-color: #f4f6f8;
+`
+
+const AppBody = styled.div`
+  display: flex;
+  padding-top: 64px;
+
+  @media (max-width: 480px) {
+    padding-top: 56px;
+  }
+`
+
+const MainContent = styled.main`
+  margin-left: 220px;
+  width: calc(100% - 220px);
+  min-height: calc(100vh - 64px);
+  padding: 32px;
+
+  @media (max-width: 768px) {
+    margin-left: 0;
+    width: 100%;
+    padding: 24px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 18px;
+  }
+`
+
+const Overlay = styled.div`
+  display: none;
+
+  @media (max-width: 768px) {
+    display: block;
+
+    position: fixed;
+    top: 64px;
+    left: 0;
+
+    width: 100%;
+    height: calc(100vh - 64px);
+
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+  }
+
+  @media (max-width: 480px) {
+    top: 56px;
+    height: calc(100vh - 56px);
+  }
+`
