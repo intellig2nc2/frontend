@@ -1,81 +1,178 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
+// SiderBar.jsx
+
+import React, { useState } from 'react'
 import styled from 'styled-components'
+import { Link, useLocation } from 'react-router-dom'
 
-const SiderBar = ({ isOpen, closeMenu }) => {
+const SiderBar = () => {
+
+    const [open, setOpen] = useState(false)
+
+    const location = useLocation()
+
   return (
-    <Sidebar $isOpen={isOpen}>
-      <Menu>
-        <MenuItem to="/" onClick={closeMenu}>
-          Home
-        </MenuItem>
+    <>
 
-        <MenuItem to="/todo" onClick={closeMenu}>
-          할일
-        </MenuItem>
+        {/* 모바일 상단 바 */}
+        <MobileTopBar>
 
-        <MenuItem to="/employee" onClick={closeMenu}>
-          고용인 정보
-        </MenuItem>
-      </Menu>
-    </Sidebar>
+            <MenuButton
+                onClick={() => setOpen(!open)}
+            >
+                ☰
+            </MenuButton>
+
+            <MobileLogo>
+                MySystem
+            </MobileLogo>
+
+        </MobileTopBar>
+
+        {/* 사이드바 */}
+        <Container $open={open}>
+
+            <Menu>
+
+                <MenuItem
+                    to="/"
+                    $active={location.pathname === "/"}
+                    onClick={() => setOpen(false)}
+                >
+                    Home
+                </MenuItem>
+
+                <MenuItem
+                    to="/todo"
+                    $active={location.pathname === "/todo"}
+                    onClick={() => setOpen(false)}
+                >
+                    할일
+                </MenuItem>
+
+                <MenuItem
+                    to="/employee"
+                    $active={location.pathname === "/employee"}
+                    onClick={() => setOpen(false)}
+                >
+                    고용인 정보
+                </MenuItem>
+
+            </Menu>
+
+        </Container>
+
+    </>
   )
 }
 
 export default SiderBar
 
-const Sidebar = styled.aside`
-  position: fixed;
-  top: 64px;
-  left: 0;
 
-  width: 220px;
-  height: calc(100vh - 64px);
+const MobileTopBar = styled.div`
 
-  background-color: #111827;
-  color: white;
+    display: none;
 
-  padding: 24px 16px;
-  z-index: 1100;
+    @media (max-width: 768px){
 
-  transition: transform 0.3s ease;
+        width: 100%;
+        height: 60px;
 
-  @media (max-width: 768px) {
-    transform: ${({ $isOpen }) =>
-      $isOpen ? 'translateX(0)' : 'translateX(-100%)'};
-  }
+        background: #1e293b;
 
-  @media (max-width: 480px) {
-    top: 56px;
-    height: calc(100vh - 56px);
-    width: 200px;
-  }
-`
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        padding: 0 16px;
+
+        position: fixed;
+
+        top: 0;
+        left: 0;
+
+        z-index: 1000;
+    }
+`;
+
+const MenuButton = styled.button`
+
+    border: none;
+    background: transparent;
+
+    color: white;
+
+    font-size: 28px;
+
+    cursor: pointer;
+`;
+
+const MobileLogo = styled.div`
+
+    color: white;
+
+    font-size: 20px;
+    font-weight: bold;
+`;
+
+const Container = styled.aside`
+
+    width: 240px;
+
+    min-height: calc(100vh - 70px);
+
+    background: #1e293b;
+
+    padding: 24px 16px;
+
+    transition: 0.3s;
+
+    @media (max-width: 768px){
+
+        position: fixed;
+
+        top: 60px;
+
+        left: ${({ $open }) => ($open ? "0" : "-100%")};
+
+        width: 240px;
+
+        height: calc(100vh - 60px);
+
+        overflow-y: auto;
+
+        z-index: 999;
+    }
+`;
 
 const Menu = styled.nav`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`
 
-const MenuItem = styled(NavLink)`
-  text-decoration: none;
+    display: flex;
+    flex-direction: column;
 
-  padding: 14px 16px;
-  border-radius: 10px;
+    gap: 12px;
+`;
 
-  color: #d1d5db;
-  transition: 0.2s;
-  font-size: 15px;
+const MenuItem = styled(Link)`
 
-  &:hover {
-    background-color: #1f2937;
-    color: #ffffff;
-  }
+    text-decoration: none;
 
-  &.active {
-    background-color: #2563eb;
-    color: #ffffff;
-    font-weight: bold;
-  }
-`
+    padding: 14px 18px;
+
+    border-radius: 10px;
+
+    color: ${({ $active }) =>
+        $active ? "white" : "#cbd5e1"};
+
+    background: ${({ $active }) =>
+        $active ? "#3b82f6" : "transparent"};
+
+    font-size: 16px;
+    font-weight: 500;
+
+    transition: 0.2s;
+
+    &:hover{
+        background: #334155;
+        color: white;
+    }
+`;

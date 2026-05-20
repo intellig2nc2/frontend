@@ -1,131 +1,152 @@
+// HeaderBar.jsx
+
 import React from 'react'
 import styled from 'styled-components'
+import { useNavigate } from 'react-router-dom'
 
-const HeaderBar = ({ toggleMenu }) => {
+const HeaderBar = ({ loginMode, setLoginMode }) => {
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+  setLoginMode(prev => ({
+    ...prev,
+    isLogin: false,
+    username: ''
+  }))
+
+  alert("로그아웃 되었습니다")
+
+  navigate("/")
+}
+
   return (
-    <Header>
-      <LeftBox>
-        <MenuButton onClick={toggleMenu}>
-          ☰
-        </MenuButton>
+    <Container>
+      <Logo onClick={() => navigate("/")}>
+        Logo
+      </Logo>
 
-        <Logo>Logo</Logo>
-      </LeftBox>
+      <Menu>
+        {loginMode.isLogin ? (
+          <ButtonGroup>
+            <UserButton>
+              안녕 {loginMode.username}
+            </UserButton>
 
-      <ButtonBox>
-        <LoginButton>로그인</LoginButton>
-        <JoinButton>회원가입</JoinButton>
-      </ButtonBox>
-    </Header>
+            <LogoutButton onClick={handleLogout}>
+              로그아웃
+            </LogoutButton>
+          </ButtonGroup>
+        ) : (
+          <ButtonGroup>
+            <LoginButton onClick={() => navigate("/login")}>
+              로그인
+            </LoginButton>
+
+            <RegisterButton onClick={() => navigate("/register")}>
+              회원가입
+            </RegisterButton>
+          </ButtonGroup>
+        )}
+      </Menu>
+    </Container>
   )
 }
 
 export default HeaderBar
 
-const Header = styled.header`
-  position: fixed;
-  top: 0;
-  left: 0;
 
+const Container = styled.header`
   width: 100%;
-  height: 64px;
+  height: 70px;
 
-  background-color: #ffffff;
-  border-bottom: 1px solid #dddddd;
+  background: #1e293b;
 
   display: flex;
-  align-items: center;
   justify-content: space-between;
-
-  padding: 0 28px;
-  z-index: 1300;
-
-  @media (max-width: 768px) {
-    padding: 0 16px;
-  }
-
-  @media (max-width: 480px) {
-    height: 56px;
-  }
-`
-
-const LeftBox = styled.div`
-  display: flex;
   align-items: center;
-  gap: 14px;
-`
 
-const MenuButton = styled.button`
-  display: none;
+  padding: 0 32px;
+
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+
+  position: sticky;
+  top: 0;
+
+  z-index: 1000;
 
   @media (max-width: 768px) {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 38px;
-    height: 38px;
-
-    border: none;
-    border-radius: 8px;
-
-    background-color: #ffffff;
-    color: #111827;
-
-    font-size: 24px;
-    cursor: pointer;
-  }
-
-  &:hover {
-    background-color: #f3f4f6;
-  }
-
-  @media (max-width: 480px) {
-    width: 34px;
-    height: 34px;
-    font-size: 22px;
+    display: none;
   }
 `
 
 const Logo = styled.div`
-  font-size: 22px;
+  font-size: 24px;
   font-weight: bold;
-  color: #222222;
 
-  @media (max-width: 480px) {
-    font-size: 18px;
-  }
+  color: #4dabf7;
+
+  cursor: pointer;
 `
 
-const ButtonBox = styled.div`
+const Menu = styled.div`
   display: flex;
-  gap: 10px;
+  align-items: center;
 
-  @media (max-width: 480px) {
-    gap: 6px;
-  }
+  gap: 12px;
+`
+
+const ButtonGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
 `
 
 const BaseButton = styled.button`
   border: none;
-  cursor: pointer;
+  outline: none;
 
-  padding: 8px 14px;
+  padding: 10px 16px;
+
   border-radius: 8px;
 
-  color: white;
-  font-size: 14px;
+  cursor: pointer;
 
-  @media (max-width: 480px) {
-    padding: 6px 8px;
-    font-size: 12px;
+  font-size: 14px;
+  font-weight: 600;
+
+  transition: 0.2s;
+
+  &:hover {
+    transform: translateY(-1px);
   }
 `
 
 const LoginButton = styled(BaseButton)`
-  background-color: #2563eb;
+  background: white;
+  color: #1e293b;
 `
 
-const JoinButton = styled(BaseButton)`
-  background-color: #111827;
+const RegisterButton = styled(BaseButton)`
+  background: #3b82f6;
+  color: white;
+`
+
+const UserButton = styled(BaseButton)`
+  background: #334155;
+  color: white;
+  cursor: default;
+
+  &:hover {
+    transform: none;
+  }
+`
+
+const LogoutButton = styled(BaseButton)`
+  background: #ef4444;
+  color: white;
+
+  &:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+  }
 `

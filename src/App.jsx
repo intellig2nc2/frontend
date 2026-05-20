@@ -1,4 +1,6 @@
-import { useState } from 'react'
+// App.jsx
+
+import './App.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -8,93 +10,91 @@ import EmployeePage from './no1_pages/EmployeePage'
 
 import HeaderBar from './no2_components/layout/HeaderBar'
 import SiderBar from './no2_components/layout/SiderBar'
+import LoginPage from './no1_pages/user/LoginPage'
+import { useState } from 'react'
+import RegisterPage from './no1_pages/user/RegisterPage'
+
+const initialState = [
+  {id: 1, username: "john", password: "1111"},
+  {id: 2, username: "peter", password: "1111"},
+  {id: 3, username: "susan", password: "1111"},
+  {id: 4, username: "sue", password: "1111"},
+]
+
+const initialMode = {
+  isLogin: false, 
+  username: ""
+}
 
 function App() {
-  const [isOpen, setIsOpen] = useState(false)
-
-  const toggleMenu = () => {
-    setIsOpen(!isOpen)
-  }
-
-  const closeMenu = () => {
-    setIsOpen(false)
-  }
+  const [users, setUsers] = useState(initialState);
+  const [loginMode, setLoginMode] = useState(initialMode);
 
   return (
     <BrowserRouter>
-      <AppContainer>
-        <HeaderBar toggleMenu={toggleMenu} />
+    {console.log(users)}
+      {/* {console.log(loginMode.username)} */}
+      <Container>
 
-        <AppBody>
-          <SiderBar isOpen={isOpen} closeMenu={closeMenu} />
+        <HeaderBar
+          loginMode={loginMode}
+          setLoginMode={setLoginMode}
+        />
 
-          <MainContent>
+        <BodyLayout>
+
+          <SiderBar/>
+
+          <PageContainer>
+
             <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/todo" element={<TodoPage />} />
-              <Route path="/employee" element={<EmployeePage />} />
-            </Routes>
-          </MainContent>
-        </AppBody>
+              <Route path="/login" element={
+                <LoginPage
+                    users={users}
+                    setLoginMode={setLoginMode}
+                />
+                }/>
+              <Route path="/register" element={
+                <RegisterPage
+                    setUsers={setUsers}
+                />
+                }/>
 
-        {isOpen && <Overlay onClick={closeMenu} />}
-      </AppContainer>
+              <Route path="/" element={<HomePage/>}/>
+              <Route path="/todo" element={<TodoPage/>}/>
+              <Route path="/employee" element={<EmployeePage/>}/>
+            </Routes>
+
+          </PageContainer>
+
+        </BodyLayout>
+
+      </Container>
+
     </BrowserRouter>
   )
 }
 
 export default App
 
-const AppContainer = styled.div`
-  min-height: 100vh;
-  background-color: #f4f6f8;
-`
 
-const AppBody = styled.div`
-  display: flex;
-  padding-top: 64px;
-
-  @media (max-width: 480px) {
-    padding-top: 56px;
-  }
-`
-
-const MainContent = styled.main`
-  margin-left: 220px;
-  width: calc(100% - 220px);
-  min-height: calc(100vh - 64px);
-  padding: 32px;
-
-  @media (max-width: 768px) {
-    margin-left: 0;
+const Container = styled.div`
     width: 100%;
-    padding: 24px;
-  }
+    min-height: 100vh;
+    background: #f1f5f9;
+`;
 
-  @media (max-width: 480px) {
-    padding: 18px;
-  }
-`
+const BodyLayout = styled.div`
+    display: flex;
+`;
 
-const Overlay = styled.div`
-  display: none;
+const PageContainer = styled.main`
+    flex: 1;
+    padding: 32px;
+    background: #f8fafc;
+    min-height: calc(100vh - 70px);
 
-  @media (max-width: 768px) {
-    display: block;
-
-    position: fixed;
-    top: 64px;
-    left: 0;
-
-    width: 100%;
-    height: calc(100vh - 64px);
-
-    background-color: rgba(0, 0, 0, 0.4);
-    z-index: 1000;
-  }
-
-  @media (max-width: 480px) {
-    top: 56px;
-    height: calc(100vh - 56px);
-  }
-`
+    @media (max-width: 768px){
+        padding: 90px 20px 20px 20px;
+    }
+`;

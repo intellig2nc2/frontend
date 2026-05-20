@@ -3,7 +3,7 @@ import React from 'react'
 const TodoPage = () => {
   return (
     <div>
-      Todopage
+      TodoPage
     </div>
   )
 }
