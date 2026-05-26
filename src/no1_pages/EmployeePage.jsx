@@ -1,60 +1,34 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect , useContext} from 'react'
 import EmployeeList from '../no2_components/employee/EmployeeList'
 import EmployeeTable from '../no2_components/employee/EmployeeTable'
 import EmployeeRegister from '../no2_components/employee/EmployeeRegister'
 import EmployeeUpdate from '../no2_components/employee/EmployeeUpdate'
+import { EmployeeContext } from '../no0_context/EmployeeContext'
 
-const initialEmps = [
-  { id: "1", name: "John", email: "john@example.com", job: "frontend", pay: 600 },
-  { id: "2", name: "Peter", email: "peter@example.com", job: "backend", pay: 600 },
-  { id: "3", name: "Susan", email: "susan@example.com", job: "db", pay: 600 },
-  { id: "4", name: "Sue", email: "sue@example.com", job: "ai", pay: 600 },
-]
 
-const initialEmp = {
-  id: '',
-  name: '',
-  email: '',
-  job: '',
-  pay: ''
-}
-
-const initialState = {
-  empTable: initialEmps,
-  emp: initialEmp,
-  mode: '',
-  selectedId: ''
-}
 
 const EmployeePage = () => {
-  const [state, setState] = useState(initialState)
-  const { empTable, emp, selectedId, mode } = state
+  const {state, dispatch} = useContext(EmployeeContext);
+  const {selectedId, empTable, mode, emp} = state;
 
   useEffect(() => {
-    if (selectedId) {
-      setState(prev => ({
-        ...prev,
-        emp: empTable.find(item => item.id === selectedId)
-      }))
-    }
-  }, [selectedId, empTable])
-
-  const handleDelete = () => {
-    if (!selectedId) {
-      alert("삭제할 직원을 먼저 선택하세요.")
-      return
-    }
-
-    setState(prev => ({
-      ...prev,
-      empTable: prev.empTable.filter(item => item.id !== selectedId),
-      emp: initialEmp,
-      selectedId: '',
-      mode: ''
-    }))
-
-    alert("삭제되었습니다.")
+  if (selectedId) {
+    dispatch({
+      type: "set_emp",
+      payload: empTable.filter(item => item.id === selectedId)[0]
+    })
   }
+}, [selectedId, empTable, dispatch])
+
+const handleDelete = () => {
+  if (!selectedId) {
+    alert("삭제할 직원을 먼저 선택하세요.")
+    return
+  }
+
+  dispatch({ type: "delete" })
+  alert("삭제되었습니다.")
+}
 
   return (
     <div style={styles.page}>
@@ -63,7 +37,7 @@ const EmployeePage = () => {
       <div style={styles.layout}>
         <section style={styles.card}>
           <h2 style={styles.subTitle}>직원 목록</h2>
-          <EmployeeList state={state} setState={setState} />
+          <EmployeeList/>
         </section>
 
         <section style={{ ...styles.card, ...styles.tableCard }}>
@@ -75,30 +49,21 @@ const EmployeePage = () => {
       <div style={styles.buttonGroup}>
         <button
           style={{ ...styles.button, ...styles.primary }}
-          onClick={() => setState(prev => ({
-            ...prev,
-            mode: "register"
-          }))}
+          onClick={() => dispatch({type: "mode", payload: "register"})}
         >
           등록
         </button>
 
         <button
           style={{ ...styles.button, ...styles.warning }}
-          onClick={() => setState(prev => ({
-            ...prev,
-            mode: "update"
-          }))}
+          onClick={() => dispatch({type: "mode", payload: "update"})}
         >
           수정
         </button>
 
         <button
           style={{ ...styles.button, ...styles.danger }}
-          onClick={() => setState(prev => ({
-            ...prev,
-            mode: "delete"
-          }))}
+          onClick={() => dispatch({type: "mode", payload: "delete"})}
         >
           삭제
         </button>
@@ -107,9 +72,9 @@ const EmployeePage = () => {
       <section style={{ ...styles.card, ...styles.formCard }}>
         {
           mode === "register" ? (
-            <EmployeeRegister setState={setState} />
+            <EmployeeRegister dispatch={dispatch} />
           ) : mode === "update" ? (
-            <EmployeeUpdate emp={emp} setState={setState} />
+            <EmployeeUpdate emp={emp} dispatch={dispatch} />
           ) : mode === "delete" ? (
             <div style={styles.deleteBox}>
               <p style={styles.deleteText}>선택한 데이터를 삭제하시겠습니까?</p>

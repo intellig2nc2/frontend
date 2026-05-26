@@ -1,23 +1,68 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { EmployeeContext } from '../../no0_context/EmployeeContext'
 
-const EmployeeList = ({state, setState}) => {
-    const {empTable}= state;
-    const handleClick =(id) =>{
-        console.log("id", id)
-        setState(prev=>(
-            {...prev, selectedId: id}
-        ))
-    }
+const EmployeeList = () => {
+  const {state, dispatch } = useContext(EmployeeContext)
+  const {empTable,selectedId} = state;
+  const handleClick = (id) => {
+    dispatch({ type: "select", payload: id })
+  }
+
   return (
-    <div>
-      {empTable.map(item=>(
-            <button onClick={()=>handleClick(item.id)}>
-                
-                {item.name}
-            </button>
-        ))}
+    <div style={styles.container}>
+      {empTable?.map(item => (
+        <button
+          key={item.id}
+          onClick={() => handleClick(item.id)}
+          style={{
+            ...styles.button,
+            ...(selectedId === item.id ? styles.activeButton : {})
+          }}
+        >
+          <div style={styles.name}>{item.name}</div>
+          <div style={styles.job}>{item.job}</div>
+        </button>
+      ))}
     </div>
   )
+}
+
+const styles = {
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12px'
+  },
+
+  button: {
+    width: '100%',
+    padding: '16px',
+    border: '1px solid #dcdde1',
+    borderRadius: '12px',
+    backgroundColor: '#ffffff',
+    textAlign: 'left',
+    cursor: 'pointer',
+    transition: '0.2s',
+    boxShadow: '0 3px 8px rgba(0, 0, 0, 0.06)'
+  },
+
+  activeButton: {
+    backgroundColor: '#3498db',
+    borderColor: '#3498db',
+    color: '#ffffff',
+    transform: 'scale(1.02)'
+  },
+
+  name: {
+    fontSize: '16px',
+    fontWeight: 'bold',
+    marginBottom: '6px'
+  },
+
+  job: {
+    fontSize: '13px',
+    opacity: 0.8
+  }
 }
 
 export default EmployeeList
