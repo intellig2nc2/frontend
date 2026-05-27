@@ -11,7 +11,7 @@ const EmployeePage = () => {
   const {state, dispatch} = useContext(EmployeeContext);
   const {selectedId, empTable, mode, emp} = state;
 
-  useEffect(() => {
+  useEffect(() => { 
   if (selectedId) {
     dispatch({
       type: "set_emp",

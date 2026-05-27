@@ -8,7 +8,7 @@ const initialState = {
 }
 
 const RegisterForm = () => {
-    const {dispatch} = useContext(UserContext);
+    const {state, dispatch} = useContext(UserContext);
     const [user, setUser] = useState(initialState)
     const navigate = useNavigate()
 
@@ -27,9 +27,10 @@ const RegisterForm = () => {
             return
         }
 
-        dispatchEvent({type:"registe", payload: {
+        dispatch({type:"register", payload: {
             id: Date.now(),
-            user
+            username: user.username,
+            password: user.password
             }})
 
         alert("회원가입이 완료되었습니다.")

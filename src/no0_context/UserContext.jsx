@@ -13,7 +13,7 @@ const initialUsers = [
 const initialState = {
   users: initialUsers,
   username: '',
-  islogin: false
+  isLogin: false
 
 }
 
@@ -23,16 +23,17 @@ const reducer = (state, action)=>{
             return{
                 ...state,
                 isLogin:true,
-                username:action.payload
+                username:action.username
             }
-        case "regist":
+        case "register":
             return{
                 ...state,
                 users:[
                     ...state.users,
                     {id: action.payload.id,
                      username: action.payload.username, 
-                     password: action.payload.password}
+                     password: action.payload.password
+                    }
                 ]
             }
         case "logout":
@@ -42,7 +43,7 @@ const reducer = (state, action)=>{
             username: ""
         }
         default:
-            return state
+            return state;
     }
 
 }

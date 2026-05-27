@@ -9,7 +9,7 @@ const initialState = {
 }
 
 const LoginForm = () => {
-  const {dispatch} = useContext(UserContext);
+  const {state, dispatch} = useContext(UserContext);
   const [user, setUser] = useState(initialState);
   const navigate = useNavigate()
 
@@ -25,7 +25,7 @@ const LoginForm = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
 
-    const loginUser = users.filter(item => (
+    const loginUser = state.users.filter(item => (
       item.username === user.username &&
       item.password === user.password
     ))[0]
