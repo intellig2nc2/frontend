@@ -1,5 +1,6 @@
-import React, { useContext, useState } from 'react'
-import { EmployeeContext } from '../../no0_context/EmployeeContext'
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { register } from '../../no3_store/slices/employeeSlice'
 
 const initialEmp = {
   id: '',
@@ -10,9 +11,8 @@ const initialEmp = {
 }
 
 const EmployeeRegister = () => {
-  const {dispatch} = useContext(EmployeeContext)
+  const dispatch = useDispatch();
   const [emp, setEmp] = useState(initialEmp)
-
   const handleChange = (event) => {
     const { name, value } = event.target
 
@@ -32,13 +32,10 @@ const EmployeeRegister = () => {
 
     const newId = Date.now().toString()
 
-    dispatch({
-      type: 'register',
-      payload: {
-        newId,
-        emp
-      }
-    })
+    dispatch(register({
+      id:newId,
+       emp
+    }))
 
     alert('등록되었습니다.')
     setEmp(initialEmp)

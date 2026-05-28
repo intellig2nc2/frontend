@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { EmployeeContext } from '../../no0_context/EmployeeContext'
+import { useDispatch, useSelector } from 'react-redux';
+// import { EmployeeContext } from '../../no0_context/EmployeeContext'
+import { update } from '../../no3_store/slices/employeeSlice';
+
+
 
 const initialEmp = {
   id: '',
@@ -10,8 +14,9 @@ const initialEmp = {
 }
 
 const EmployeeUpdate = () => {
-    const {state,dispatch} = useContext(EmployeeContext);
-    const {emp} = state;
+    // const {state,dispatch} = useContext(EmployeeContext);
+    const {emp} = useSelector(state=>state.emp);
+    const dispatch = useDispatch();
   const [newEmp, setNewEmp] = useState(initialEmp);
 
   useEffect(() => {
@@ -42,10 +47,7 @@ const EmployeeUpdate = () => {
       return
     }
 
-    dispatch({
-      type: 'update',
-      payload: newEmp
-    })
+    dispatch(update(newEmp))
 
     alert('수정되었습니다.')
   }

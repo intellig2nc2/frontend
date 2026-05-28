@@ -1,7 +1,9 @@
 import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { UserContext } from '../../no0_context/UserContext'
+// import { UserContext } from '../../no0_context/UserContext'
+import { useDispatch, useSelector } from 'react-redux'
+import { login } from '../../no3_store/slices/userSlice'
 
 const initialState = {
   username: "",
@@ -9,7 +11,8 @@ const initialState = {
 }
 
 const LoginForm = () => {
-  const {state, dispatch} = useContext(UserContext);
+  const {users} = useSelector(state=>state.user);
+  const dispatch = useDispatch();
   const [user, setUser] = useState(initialState);
   const navigate = useNavigate()
 
@@ -25,7 +28,7 @@ const LoginForm = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
 
-    const loginUser = state.users.filter(item => (
+    const loginUser = users.filter(item => (
       item.username === user.username &&
       item.password === user.password
     ))[0]
@@ -33,7 +36,7 @@ const LoginForm = () => {
     if (loginUser) {
       alert("성공")
 
-      dispatch({type:"login", payload:loginUser})
+      dispatch(login(loginUser.username))
       navigate("/")
     } else {
       alert("사용자가 아니군요!!")

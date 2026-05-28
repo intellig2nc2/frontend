@@ -2,13 +2,15 @@ import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { UserContext } from '../../no0_context/UserContext'
+import { useDispatch } from 'react-redux'
+import { register } from '../../no3_store/slices/userSlice'
 
 const initialState = {
     id: "", username: "", password: "", confirmpassword: ""
 }
 
 const RegisterForm = () => {
-    const {state, dispatch} = useContext(UserContext);
+    const dispatch = useDispatch();
     const [user, setUser] = useState(initialState)
     const navigate = useNavigate()
 
@@ -27,14 +29,13 @@ const RegisterForm = () => {
             return
         }
 
-        dispatch({type:"register", payload: {
-            id: Date.now(),
-            username: user.username,
-            password: user.password
-            }})
+        dispatch(register({
+            id: Date.now(), user
+        }))
 
         alert("회원가입이 완료되었습니다.")
         navigate("/login")
+        
     }
 
     return (

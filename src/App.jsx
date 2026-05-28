@@ -16,17 +16,17 @@ import RegisterPage from './no1_pages/user/RegisterPage'
 import EmployeeProvider from './no0_context/EmployeeContext'
 import UserProvider from './no0_context/UserContext'
 import { TodoProvider } from './no0_context/TodoContext'
+import { Provider } from 'react-redux'
+import store from './no3_store'
 
 function App() {
   return (
     <BrowserRouter>
+    <Provider store={store}>
       <Container>
-        <UserProvider>
           <HeaderBar />
-
           <BodyLayout>
             <SiderBar />
-
             <PageContainer>
               <Routes>
                 <Route path="/" element={<HomePage />} />
@@ -38,25 +38,26 @@ function App() {
                 <Route
                   path="/todo"
                   element={
-                    <TodoProvider>
+                    
                       <TodoPage />
-                    </TodoProvider>
+                    
                   }
                 />
 
                 <Route
                   path="/employee"
                   element={
-                    <EmployeeProvider>
+                    
                       <EmployeePage />
-                    </EmployeeProvider>
+                    
                   }
                 />
               </Routes>
             </PageContainer>
           </BodyLayout>
-        </UserProvider>
       </Container>
+    </Provider>
+      
     </BrowserRouter>
   )
 }

@@ -1,22 +1,21 @@
-import React, { useEffect , useContext} from 'react'
+import React, { useEffect} from 'react'
 import EmployeeList from '../no2_components/employee/EmployeeList'
 import EmployeeTable from '../no2_components/employee/EmployeeTable'
 import EmployeeRegister from '../no2_components/employee/EmployeeRegister'
 import EmployeeUpdate from '../no2_components/employee/EmployeeUpdate'
-import { EmployeeContext } from '../no0_context/EmployeeContext'
-
-
+import { useDispatch, useSelector } from 'react-redux'
+// import { EmployeeContext } from '../no0_context/EmployeeContext'
+import {setEmp,setMode,remove} from '../no3_store/slices/employeeSlice'
 
 const EmployeePage = () => {
-  const {state, dispatch} = useContext(EmployeeContext);
-  const {selectedId, empTable, mode, emp} = state;
+  // const {state, dispatch} = useContext(EmployeeContext);
+  const {selectedId, empTable, mode, emp} = useSelector(state=>state.emp);
+  const dispatch = useDispatch();
 
   useEffect(() => { 
+    const newEmp = empTable.filter(item => item.id === selectedId)[0]
   if (selectedId) {
-    dispatch({
-      type: "set_emp",
-      payload: empTable.filter(item => item.id === selectedId)[0]
-    })
+    dispatch(setEmp(newEmp))
   }
 }, [selectedId, empTable, dispatch])
 
@@ -26,7 +25,7 @@ const handleDelete = () => {
     return
   }
 
-  dispatch({ type: "delete" })
+  dispatch(remove())
   alert("삭제되었습니다.")
 }
 
@@ -42,28 +41,28 @@ const handleDelete = () => {
 
         <section style={{ ...styles.card, ...styles.tableCard }}>
           <h2 style={styles.subTitle}>직원 정보</h2>
-          <EmployeeTable state={state} />
+          <EmployeeTable empTable={empTable} selectedId={selectedId} />
         </section>
       </div>
 
       <div style={styles.buttonGroup}>
         <button
           style={{ ...styles.button, ...styles.primary }}
-          onClick={() => dispatch({type: "mode", payload: "register"})}
+          onClick={() => dispatch(setMode({newId:"register"}))}
         >
           등록
         </button>
 
         <button
           style={{ ...styles.button, ...styles.warning }}
-          onClick={() => dispatch({type: "mode", payload: "update"})}
+          onClick={() => dispatch(setMode({newId:"update"}))}
         >
           수정
         </button>
 
         <button
           style={{ ...styles.button, ...styles.danger }}
-          onClick={() => dispatch({type: "mode", payload: "delete"})}
+          onClick={() => dispatch(setMode({newId:"delete"}))}
         >
           삭제
         </button>
@@ -72,9 +71,9 @@ const handleDelete = () => {
       <section style={{ ...styles.card, ...styles.formCard }}>
         {
           mode === "register" ? (
-            <EmployeeRegister dispatch={dispatch} />
+            <EmployeeRegister />
           ) : mode === "update" ? (
-            <EmployeeUpdate emp={emp} dispatch={dispatch} />
+            <EmployeeUpdate emp={emp}/>
           ) : mode === "delete" ? (
             <div style={styles.deleteBox}>
               <p style={styles.deleteText}>선택한 데이터를 삭제하시겠습니까?</p>

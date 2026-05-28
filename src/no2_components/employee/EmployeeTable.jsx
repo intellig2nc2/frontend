@@ -1,10 +1,10 @@
 import React, { useContext } from 'react'
-import { EmployeeContext } from '../../no0_context/EmployeeContext'
+import { useSelector } from 'react-redux';
+// import { EmployeeContext } from '../../no0_context/EmployeeContext'
 
 const EmployeeTable = () => {
 
-  const { state } = useContext(EmployeeContext);
-  const {emp} = state;
+  const {emp} = useSelector(state=>state.emp);
 
   const labels = {
     id: 'ID',
